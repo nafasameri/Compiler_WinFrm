@@ -289,8 +289,8 @@ namespace Compiler_WinFrm
             //stk.Push(NULL.ToString());
             //LexicalAnalyst.Lexemes.Add(NULL);
 
-            //foreach (var item in LexicalAnalyst.Lexemes)
-            //    File.AppendAllText(path, item.ToString() + "\r\n");
+            foreach (var item in LexicalAnalyst.Lexemes)
+                File.AppendAllText(path, item.ToString() + "\r\n");
 
             //while (len < LexicalAnalyst.Lexemes.Count - 1) 
             //{

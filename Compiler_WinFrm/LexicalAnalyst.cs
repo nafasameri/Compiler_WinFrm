@@ -401,13 +401,13 @@ namespace Compiler_WinFrm
                             else { Lexemes.Add("<"); unGetChar(); }
                             state = 0;
                             break;
-                        case 7: // *=
+                        case 7: // *= *
                             c = getNextChar(str);
                             if (c == '=') Lexemes.Add("*=");
                             else { unGetChar(); Lexemes.Add("*"); }
                             state = 0;
                             break;
-                        case 12: // %=
+                        case 12: // %= %
                             c = getNextChar(str);
                             if (c == '=') Lexemes.Add("%=");
                             else { unGetChar(); Lexemes.Add("%"); }
