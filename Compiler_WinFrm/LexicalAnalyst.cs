@@ -283,6 +283,133 @@ namespace Compiler_WinFrm
             else
                 state = 5;
         }
+
+        private static void DetectChar(string str)
+        {
+            c = getNextChar(str);
+            if (c.ToString() == "'") { state = 0; throw new ErrorHandler("Empty character literal"); }
+            else if (c.ToString() != "'") state = 60;
+        }
+
+        private static void DetectCharNext(string str)
+        {
+            c = getNextChar(str);
+            if (c.ToString() == "'")
+            {
+                state = 0;
+                symbol.Add(address, new Symbol("char", str.Substring(index, len - index), "char", str.Substring(index, len - index)));
+                File.AppendAllText(path, address.ToString() + "\t\t" + symbol[address].token + "\t\t" + symbol[address].lexem + "\t\t" + symbol[address].type + "\t\t" + symbol[address].value + "\t\t" + symbol[address++].length.ToString() + "\r\n");
+                Lexemes.Add(str.Substring(index, len - index));
+            }
+            else { state = 0; throw new ErrorHandler("Too many characters in character literal"); }
+        }
+
+        private static void DetectAssign(string str)
+        {
+            c = getNextChar(str);
+            if (c == '=') Lexemes.Add("==");
+            else { unGetChar(); Lexemes.Add("="); }
+            state = 0;
+        }
+
+        private static void DetectGrather(string str)
+        {
+            c = getNextChar(str);
+            if (c == '=') Lexemes.Add(">=");
+            else { unGetChar(); Lexemes.Add(">"); }
+            state = 0;
+        }
+
+        private static void DetectLesser(string str)
+        {
+            c = getNextChar(str);
+            if (c == '=') Lexemes.Add("<=");
+            else if (c == '>') Lexemes.Add("<>");
+            else { Lexemes.Add("<"); unGetChar(); }
+            state = 0;
+        }
+
+        private static void DetectMult(string str)
+        {
+            c = getNextChar(str);
+            if (c == '=') Lexemes.Add("*=");
+            else { unGetChar(); Lexemes.Add("*"); }
+            state = 0;
+        }
+
+        private static void DetectDiv(string str)
+        {
+            c = getNextChar(str);
+            if (c == '=') Lexemes.Add("%=");
+            else { unGetChar(); Lexemes.Add("%"); }
+            state = 0;
+        }
+
+        private static void DetectADD(string str)
+        {
+            c = getNextChar(str);
+            if (c == '+') Lexemes.Add("++");
+            else if (c == '=') Lexemes.Add("+=");
+            else { unGetChar(); Lexemes.Add("+"); }
+            state = 0;
+        }
+
+        private static void DetectMines(string str)
+        {
+            c = getNextChar(str);
+            if (c == '-') Lexemes.Add("--");
+            else if (c == '=') Lexemes.Add("-=");
+            else { unGetChar(); Lexemes.Add("-"); }
+            state = 0;
+        }
+
+        private static void DetectComment(string str)
+        {
+            c = getNextChar(str);
+            if (c == '/')
+            {
+                while ((Keys)c != Keys.Enter)
+                    c = getNextChar(str);
+                File.AppendAllText(path, address.ToString() + "\t\tComment\t\t" + str.Substring(index, len - index));
+                //Lexemes.Add("comment");
+            }
+            else if (c == '=') Lexemes.Add("/=");
+            else Lexemes.Add("/");
+            //else throw new ErrorHandler("Invalid expression term '/'");
+            state = 0;
+        }
+
+        private static void DetectOpenBraket(string str)
+        {
+            c = getNextChar(str);
+            if (char.IsDigit(c)) state = 14;
+            else if (c == ']') state = 15;
+            else if (isDot(c)) throw new ErrorHandler("cannot convert from 'double' to 'int'");
+            else throw new ErrorHandler("Only assignment, call, increment, decrement can be used as statement.");
+        }
+
+        private static void DetectCloseBraket(string str)
+        {
+            int.TryParse(str.Substring(index, len - index - 1), out Length);
+            state = 3;
+            getNextChar(str);
+        }
+
+        private static void DetectAND(string str)
+        {
+            c = getNextChar(str);
+            if (c == '&') Lexemes.Add("&&");
+            else { unGetChar(); Lexemes.Add("&"); }
+            state = 0;
+        }
+
+        private static void DetectOR(string str)
+        {
+            c = getNextChar(str);
+            if (c == '|') Lexemes.Add("||");
+            else { unGetChar(); Lexemes.Add("|"); }
+            state = 0;
+        }
         #endregion
 
         #region Public's Method
@@ -366,105 +493,20 @@ namespace Compiler_WinFrm
                         case 3: DetectIdentify(str); break;
                         case 4: DetectSpace(str); break;
                         case 5: DetectString(str); break;
-                        case 6: // character
-                            c = getNextChar(str);
-                            if (c.ToString() == "'") { state = 0; throw new ErrorHandler("Empty character literal"); }
-                            else if (c.ToString() != "'") state = 60;
-                            break;
-                        case 60: // character
-                            c = getNextChar(str);
-                            if (c.ToString() == "'")
-                            {
-                                state = 0;
-                                symbol.Add(address, new Symbol("char", str.Substring(index, len - index), "char", str.Substring(index, len - index)));
-                                File.AppendAllText(path, address.ToString() + "\t\t" + symbol[address].token + "\t\t" + symbol[address].lexem + "\t\t" + symbol[address].type + "\t\t" + symbol[address].value + "\t\t" + symbol[address++].length.ToString() + "\r\n");
-                                Lexemes.Add(str.Substring(index, len - index));
-                            }
-                            else { state = 0; throw new ErrorHandler("Too many characters in character literal"); }
-                            break;
-                        case 9: // == =
-                            c = getNextChar(str);
-                            if (c == '=') Lexemes.Add("==");
-                            else { unGetChar(); Lexemes.Add("="); }
-                            state = 0;
-                            break;
-                        case 16: // >= >
-                            c = getNextChar(str);
-                            if (c == '=') Lexemes.Add(">=");
-                            else { unGetChar(); Lexemes.Add(">"); }
-                            state = 0;
-                            break;
-                        case 8: // <= < <>
-                            c = getNextChar(str);
-                            if (c == '=') Lexemes.Add("<=");
-                            else if (c == '>') Lexemes.Add("<>");
-                            else { Lexemes.Add("<"); unGetChar(); }
-                            state = 0;
-                            break;
-                        case 7: // *= *
-                            c = getNextChar(str);
-                            if (c == '=') Lexemes.Add("*=");
-                            else { unGetChar(); Lexemes.Add("*"); }
-                            state = 0;
-                            break;
-                        case 12: // %= %
-                            c = getNextChar(str);
-                            if (c == '=') Lexemes.Add("%=");
-                            else { unGetChar(); Lexemes.Add("%"); }
-                            state = 0;
-                            break;
-                        case 10: //++ + +=
-                            c = getNextChar(str);
-                            if (c == '+') Lexemes.Add("++");
-                            else if (c == '=') Lexemes.Add("+=");
-                            else { unGetChar(); Lexemes.Add("+"); }
-                            state = 0;
-                            break;
-                        case 11: //-- - -=
-                            c = getNextChar(str);
-                            if (c == '-') Lexemes.Add("--");
-                            else if (c == '=') Lexemes.Add("-=");
-                            else { unGetChar(); Lexemes.Add("-"); }
-                            state = 0;
-                            break;
-                        case 13: // comment
-                            c = getNextChar(str);
-                            if (c == '/')
-                            {
-                                while ((Keys)c != Keys.Enter)
-                                    c = getNextChar(str);
-                                File.AppendAllText(path, address.ToString() + "\t\tComment\t\t" + str.Substring(index, len - index));
-                                //Lexemes.Add("comment");
-                            }
-                            else if (c == '=') Lexemes.Add("/=");
-                            else Lexemes.Add("/");
-                            //else throw new ErrorHandler("Invalid expression term '/'");
-                            state = 0;
-                            break;
-                        case 14: // array [
-                            c = getNextChar(str);
-                            if (char.IsDigit(c)) state = 14;
-                            else if (c == ']') state = 15;
-                            else if (isDot(c)) throw new ErrorHandler("cannot convert from 'double' to 'int'");
-                            else throw new ErrorHandler("Only assignment, call, increment, decrement can be used as statement.");
-                            break;
-                        case 15: // ]
-                            int.TryParse(str.Substring(index, len - index - 1), out Length);
-                            state = 3;
-                            getNextChar(str);
-                            break;
-                        case 17: // && &
-                            c = getNextChar(str);
-                            if (c == '&') Lexemes.Add("&&");
-                            else { unGetChar(); Lexemes.Add("&"); }
-                            state = 0;
-                            break;
-                        case 18: // || |
-                            c = getNextChar(str);
-                            if (c == '|') Lexemes.Add("||");
-                            else { unGetChar(); Lexemes.Add("|"); }
-                            state = 0;
-                            break;
+                        case 6: DetectChar(str); break;
+                        case 60: DetectCharNext(str); break;
+                        case 7: DetectMult(str); break;
+                        case 8: DetectLesser(str); break;
+                        case 9: DetectAssign(str); break;
+                        case 10: DetectADD(str); break;
+                        case 11: DetectMines(str); break;
+                        case 12: DetectDiv(str); break;
+                        case 13: DetectComment(str); break;
+                        case 14: DetectOpenBraket(str); break;
+                        case 15: DetectCloseBraket(str); break;
+                        case 16: DetectGrather(str); break;
+                        case 17: DetectAND(str); break;
+                        case 18: DetectOR(str); break;
                     }
                 }
                 catch (ErrorHandler err) { error += (err.Message + "\r\n"); }
