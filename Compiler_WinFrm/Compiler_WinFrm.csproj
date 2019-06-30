@@ -62,6 +62,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="SemanticAnalyst.cs" />
+    <Compile Include="Symbol.cs" />
     <Compile Include="SyntacticAnalyst.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

@@ -6,24 +6,6 @@ using System;
 
 namespace Compiler_WinFrm
 {
-    struct Symbol
-    {
-        public string token;
-        public string lexem;
-        public string type;
-        public string value;
-        public int length;
-
-        public Symbol(string token, string lexem, string type, string value, int length = 0)
-        {
-            this.token = token;
-            this.lexem = lexem;
-            this.type = type;
-            this.value = value;
-            this.length = length;
-        }
-    }
-
     class LexicalAnalyst
     {
         private const char NULL = '$';
@@ -58,12 +40,10 @@ namespace Compiler_WinFrm
 
         private static bool isLetter(char c)
         {
-            if (c == 'a' || c == 'b' || c == 'c' || c == 'd' || c == 'e' || c == 'f' || c == 'h' || c == 'i' || c == 'j' || c == 'k' || c == 'l' || c == 'm' || c == 'n' ||
-                c == 'o' || c == 'p' || c == 'q' || c == 'r' || c == 's' || c == 't' || c == 'u' || c == 'y' || c == 'w' || c == 'x' || c == 'v' || c == 'z' || c == 'g' ||
-                c == 'A' || c == 'B' || c == 'C' || c == 'D' || c == 'E' || c == 'F' || c == 'H' || c == 'I' || c == 'J' || c == 'K' || c == 'L' || c == 'M' || c == 'N' ||
-                c == 'O' || c == 'P' || c == 'Q' || c == 'R' || c == 'S' || c == 'T' || c == 'U' || c == 'Y' || c == 'W' || c == 'X' || c == 'V' || c == 'Z' || c == 'G')
-                return true;
-            return false;
+            return c == 'a' || c == 'b' || c == 'c' || c == 'd' || c == 'e' || c == 'f' || c == 'h' || c == 'i' || c == 'j' || c == 'k' || c == 'l' || c == 'm' || c == 'n' ||
+                   c == 'o' || c == 'p' || c == 'q' || c == 'r' || c == 's' || c == 't' || c == 'u' || c == 'y' || c == 'w' || c == 'x' || c == 'v' || c == 'z' || c == 'g' ||
+                   c == 'A' || c == 'B' || c == 'C' || c == 'D' || c == 'E' || c == 'F' || c == 'H' || c == 'I' || c == 'J' || c == 'K' || c == 'L' || c == 'M' || c == 'N' ||
+                   c == 'O' || c == 'P' || c == 'Q' || c == 'R' || c == 'S' || c == 'T' || c == 'U' || c == 'Y' || c == 'W' || c == 'X' || c == 'V' || c == 'Z' || c == 'G';
         }
 
         private static bool isSpace(char c)
@@ -86,50 +66,18 @@ namespace Compiler_WinFrm
             return false;
         }
 
-        private static bool FindKeys(string lexem)
+        private static bool FindType(string lexem, string type)
         {
             for (int i = 0; i < symbol.Count; i++)
-                if (symbol[i].lexem == lexem && symbol[i].type == "key") 
+                if (symbol[i].lexem == lexem && symbol[i].type == type)
                     return true;
             return false;
         }
 
-        private static bool FindOperations(string lexem)
+        private static bool FindToken(string lexem, string token)
         {
             for (int i = 0; i < symbol.Count; i++)
-                if (symbol[i].lexem == lexem && symbol[i].type == "operation")
-                    return true;
-            return false;
-        }
-
-        private static bool FindRelation(string lexem)
-        {
-            for (int i = 0; i < symbol.Count; i++)
-                if (symbol[i].lexem == lexem && symbol[i].type == "Condition relation")
-                    return true;
-            return false;
-        }
-
-        private static bool FindBitRelation(string lexem)
-        {
-            for (int i = 0; i < symbol.Count; i++)
-                if (symbol[i].lexem == lexem && symbol[i].type == "Bit relation")
-                    return true;
-            return false;
-        }
-
-        private static bool FindLogicRelation(string lexem)
-        {
-            for (int i = 0; i < symbol.Count; i++)
-                if (symbol[i].lexem == lexem && symbol[i].type == "logic relation")
-                    return true;
-            return false;
-        }
-
-        private static bool FindDataType(string lexem)
-        {
-            for (int i = 0; i < symbol.Count; i++)
-                if (symbol[i].lexem == lexem && symbol[i].token == "Data Type")
+                if (symbol[i].lexem == lexem && symbol[i].token == token)
                     return true;
             return false;
         }
@@ -140,7 +88,7 @@ namespace Compiler_WinFrm
         {
             index = len;
             c = getNextChar(str);
-            if (c == NULL) throw new ErrorHandler("Unexpected character '" + NULL + "'");
+            if (c == NULL) throw new ErrorHandler("Unexpected character '" + NULL + "'", "Lexical");
             else if (char.IsDigit(c)) state = 1;
             else if (isLetter(c) || c == '_') state = 3;
             else if (isSpace(c)) state = 4;
@@ -163,20 +111,22 @@ namespace Compiler_WinFrm
             else if (c == '{') Lexemes.Add("{");
             else if (c == '(') Lexemes.Add("(");
             else if (c == ')') Lexemes.Add(")");
-            else if (c == '!') { Lexemes.Add("!"); }
+            else if (c == '!') state = 20;
             else if (c == '&') state = 17;
             else if (c == '|') state = 18;
-            else if (c == '@') throw new ErrorHandler("Keyword, identifier, or string expected after verbatim specifier: @");
+            else if (c == '@') throw new ErrorHandler("Keyword, identifier, or string expected after verbatim specifier: @", "Lexical");
             else if (c == ';') Lexemes.Add(";");
+            else if (c == ':') Lexemes.Add(":");
+            else if (c == '.') Lexemes.Add(".");
 
             else if ((Keys)c == Keys.Back) { }
-            else if ((Keys)c == Keys.Enter) { }
+            else if ((Keys)c == Keys.Enter) { }//Lexemes.Add(NULL.ToString());
 
             else if (c == char.MaxValue) { }
             else if (c == '\n') { }
             else if (c == '\r') { }
 
-            else throw new ErrorHandler("Unreachable code detected!");
+            else throw new ErrorHandler("Unreachable code detected!", "Lexical");
         }
 
         private static void DetectIntNumber(string str)
@@ -194,7 +144,10 @@ namespace Compiler_WinFrm
                 unGetChar();
                 state = 0;
                 type = string.Empty;
-                throw new ErrorHandler("Identifier expected");
+                symbol.Add(address, new Symbol("UnKnown", str.Substring(index, len - index), "UnKnown", str.Substring(index, len - index)));
+                File.AppendAllText(path, address.ToString() + "\t\t" + symbol[address].token + "\t\t" + symbol[address].lexem + "\t\t" + symbol[address].type + "\t\t" + symbol[address].value + "\t\t" + symbol[address++].length.ToString() + "\r\n");
+                Lexemes.Add(str.Substring(index, len - index));
+                throw new ErrorHandler("Identifier expected", "Lexical");
             }
             else
             {
@@ -230,6 +183,8 @@ namespace Compiler_WinFrm
             {
                 state = 14;
                 lexem = str.Substring(index, len - index - 1);
+                Lexemes.Add(lexem);
+                //Lexemes.Add("[");
                 index = len;
             }
             else
@@ -238,23 +193,32 @@ namespace Compiler_WinFrm
                 unGetChar();
                 if (lexem == string.Empty)
                     lexem = str.Substring(index, len - index);
-                if (!FindSymbol(lexem) && !FindKeys(lexem) && !FindRelation(lexem) && !FindOperations(lexem) && !FindBitRelation(lexem) && !FindLogicRelation(lexem))
+                if (!FindType(lexem, "key") && !FindType(lexem, "Condition relation") && !FindType(lexem, "operation") && !FindType(lexem, "Bit relation") && !FindType(lexem, "logic relation"))//!FindSymbol(lexem) && 
                 {
-                    symbol.Add(address, new Symbol("id", lexem, type, string.Empty, Length));
-                    File.AppendAllText(path, address.ToString() + "\t\t" + symbol[address].token + "\t\t" + symbol[address].lexem + "\t\t" + symbol[address].type + "\t\t" + symbol[address].value + "\t\t" + symbol[address++].length.ToString() + "\r\n");
-                    //Lexemes.Add(lexem);
-                    lexem = string.Empty;
-                    Length = 0;
-                    type = string.Empty;
+                    if (!FindToken(lexem, "id"))
+                    {
+                        symbol.Add(address, new Symbol("id", lexem, type, string.Empty, Length));
+                        File.AppendAllText(path, address.ToString() + "\t\t" + symbol[address].token + "\t\t" + symbol[address].lexem + "\t\t" + symbol[address].type + "\t\t" + symbol[address].value + "\t\t" + symbol[address++].length.ToString() + "\r\n");
+                        //Lexemes.Add(lexem);
+                        lexem = string.Empty;
+                        Length = 0;
+                        type = string.Empty;
+                    }
+                    else if (type != string.Empty) { type = string.Empty; throw new ErrorHandler("Embedded statement cannot be a declaration or labeled statement", "Semantic"); }
                 }
-                else if (FindDataType(lexem) && type == string.Empty)
+                else if (FindToken(lexem, "Data Type") && type == string.Empty)
                 {
                     type = lexem;
                     lexem = string.Empty;
                 }
-                else if (FindDataType(lexem) && type != string.Empty)
-                    throw new ErrorHandler("Identifier expected");
+                else if (FindToken(lexem, "Data Type") && type != string.Empty)
+                {
+                    lexem = string.Empty;
+                    throw new ErrorHandler("Identifier expected", "Semantic");
+                }
+                //if (!FindToken(lexem, "id")) lexem = string.Empty;
                 if (FindSymbol(str.Substring(index, len - index))) Lexemes.Add(str.Substring(index, len - index));
+                lexem = string.Empty;
             }
         }
 
@@ -287,7 +251,7 @@ namespace Compiler_WinFrm
         private static void DetectChar(string str)
         {
             c = getNextChar(str);
-            if (c.ToString() == "'") { state = 0; throw new ErrorHandler("Empty character literal"); }
+            if (c.ToString() == "'") { state = 0; throw new ErrorHandler("Empty character literal", "Semantic"); }
             else if (c.ToString() != "'") state = 60;
         }
 
@@ -301,7 +265,7 @@ namespace Compiler_WinFrm
                 File.AppendAllText(path, address.ToString() + "\t\t" + symbol[address].token + "\t\t" + symbol[address].lexem + "\t\t" + symbol[address].type + "\t\t" + symbol[address].value + "\t\t" + symbol[address++].length.ToString() + "\r\n");
                 Lexemes.Add(str.Substring(index, len - index));
             }
-            else { state = 0; throw new ErrorHandler("Too many characters in character literal"); }
+            else { state = 0; throw new ErrorHandler("Too many characters in character literal", "Semantic"); }
         }
 
         private static void DetectAssign(string str)
@@ -371,11 +335,10 @@ namespace Compiler_WinFrm
                 while ((Keys)c != Keys.Enter)
                     c = getNextChar(str);
                 File.AppendAllText(path, address.ToString() + "\t\tComment\t\t" + str.Substring(index, len - index));
-                //Lexemes.Add("comment");
             }
             else if (c == '=') Lexemes.Add("/=");
             else Lexemes.Add("/");
-            //else throw new ErrorHandler("Invalid expression term '/'");
+            //else throw new ErrorHandler("Invalid expression term '/'", "Syntax");
             state = 0;
         }
 
@@ -383,16 +346,24 @@ namespace Compiler_WinFrm
         {
             c = getNextChar(str);
             if (char.IsDigit(c)) state = 14;
-            else if (c == ']') state = 15;
-            else if (isDot(c)) throw new ErrorHandler("cannot convert from 'double' to 'int'");
-            else throw new ErrorHandler("Only assignment, call, increment, decrement can be used as statement.");
+            else if (c == ']') state = 15; 
+            else if (isDot(c)) throw new ErrorHandler("cannot convert from 'double' to 'int'", "Semantic");
+            else throw new ErrorHandler("Only assignment, call, increment, decrement can be used as statement.", "Semantic");
+        }
+
+        private static void DetectBraket(string str)
+        {           
+            c = getNextChar(str);
         }
 
         private static void DetectCloseBraket(string str)
         {
             int.TryParse(str.Substring(index, len - index - 1), out Length);
             state = 3;
-            getNextChar(str);
+            if (Length == 0) throw new ErrorHandler("value expected", "Semantic");
+            //Lexemes.Add(Length.ToString());
+            //Lexemes.Add("]");
+            //getNextChar(str);
         }
 
         private static void DetectAND(string str)
@@ -408,6 +379,14 @@ namespace Compiler_WinFrm
             c = getNextChar(str);
             if (c == '|') Lexemes.Add("||");
             else { unGetChar(); Lexemes.Add("|"); }
+            state = 0;
+        }
+        
+        private static void DetectWow(string str)
+        {
+            c = getNextChar(str);
+            if (c == '=') Lexemes.Add("!=");
+            else { Lexemes.Add("!"); unGetChar(); }
             state = 0;
         }
         #endregion
@@ -443,6 +422,7 @@ namespace Compiler_WinFrm
             symbol.Add(address++, new Symbol("Public", "public", "key", "public"));
             symbol.Add(address++, new Symbol("Private", "private", "key", "private"));
             symbol.Add(address++, new Symbol("Protected", "protected", "key", "protected"));;
+            symbol.Add(address++, new Symbol("Break", "break", "key", "break"));;
 
             symbol.Add(address++, new Symbol("Data Type", "int", "key", "int"));
             symbol.Add(address++, new Symbol("Data Type", "float", "key", "float"));
@@ -456,14 +436,17 @@ namespace Compiler_WinFrm
             symbol.Add(address++, new Symbol("DIFE", "-", "operation", "-"));
             symbol.Add(address++, new Symbol("MUL", "*", "operation", "*"));
             symbol.Add(address++, new Symbol("DIV", "/", "operation", "/"));
-            symbol.Add(address++, new Symbol("inc", "++", "operation", "++"));
-            symbol.Add(address++, new Symbol("dec", "--", "operation", "--"));
+            symbol.Add(address++, new Symbol("INC", "++", "operation", "++"));
+            symbol.Add(address++, new Symbol("DEC", "--", "operation", "--"));
+            symbol.Add(address++, new Symbol("Assign", "=", "operation", "="));
 
             symbol.Add(address++, new Symbol("and", "&&", "logic relation", "&&"));
             symbol.Add(address++, new Symbol("or", "||", "logic relation", "||"));
             symbol.Add(address++, new Symbol("not", "!", "logic relation", "!"));
+
             symbol.Add(address++, new Symbol("and Bit", "&", "Bit relation", "&"));
             symbol.Add(address++, new Symbol("or Bit", "|", "Bit relation", "|"));
+
             symbol.Add(address++, new Symbol("eqall", "==", "Condition relation", "=="));
             symbol.Add(address++, new Symbol("grather Than", ">=", "Condition relation", ">="));
             symbol.Add(address++, new Symbol("grather", ">", "Condition relation", ">"));
@@ -471,16 +454,15 @@ namespace Compiler_WinFrm
             symbol.Add(address++, new Symbol("leter Than", "<=", "Condition relation", "<="));
             symbol.Add(address++, new Symbol("not Eqall", "<>", "Condition relation", "<>"));
 
-            //symbol.Add(address++, new Symbol("id", "a", "int", ""));
-
-            //File.WriteAllText(path, "Address\t\tToken\t\tLexem\t\tType\t\tValue\t\tLength\r\n");
-            //for (int i = 0; i < symbol.Count; i++)
-            //    File.AppendAllText(path, i.ToString() + "\t\t" + symbol[i].token + "\t\t" + symbol[i].lexem + "\t\t" + symbol[i].type + "\t\t" + symbol[i].value + "\t\t" + symbol[i].length + "\r\n");
+            File.WriteAllText(path, "Address\t\tToken\t\tLexem\t\tType\t\tValue\t\tLength\r\n");
+            for (int i = 0; i < symbol.Count; i++)
+                File.AppendAllText(path, i.ToString() + "\t\t" + symbol[i].token + "\t\t" + symbol[i].lexem + "\t\t" + symbol[i].type + "\t\t" + symbol[i].value + "\t\t" + symbol[i].length + "\r\n");
         }
 
         public static string Compile(string str)
         {
             len = 0;
+            Lexemes.Clear();
             string error = string.Empty;
             while (len <= str.Length)
                 try
@@ -507,6 +489,8 @@ namespace Compiler_WinFrm
                         case 16: DetectGrather(str); break;
                         case 17: DetectAND(str); break;
                         case 18: DetectOR(str); break;
+                        case 19: DetectBraket(str); break;
+                        case 20: DetectWow(str); break;
                     }
                 }
                 catch (ErrorHandler err) { error += (err.Message + "\r\n"); }

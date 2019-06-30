@@ -26,10 +26,11 @@ namespace Compiler_WinFrm
 
         private void ErrorList(string error)
         {
+            //new Font(Font.FontFamily, 9)
             // g.Clear(txtErrors.BackColor);
-            g.DrawString(error, new Font(Font.FontFamily, 9), new SolidBrush(Color.White), new Point(38, (timer * 20) + 2));
+            g.DrawString(error, Font, new SolidBrush(Color.White), new Point(38, (timer * 20) + 2));
             g.FillEllipse(new SolidBrush(Color.Red), 8, (timer * 20) + 2, 18, 18);
-            g.DrawString("Line " + (txtCompiler.GetLineFromCharIndex(txtCompiler.SelectionStart) + 1).ToString(), new Font(Font.FontFamily, 9), new SolidBrush(Color.White), new Point(500, (timer++ * 20) + 2));
+            g.DrawString("Line " + (txtCompiler.GetLineFromCharIndex(txtCompiler.SelectionStart) + 1).ToString(), Font, new SolidBrush(Color.White), new Point(500, (timer++ * 20) + 2));
         }
 
         private void txtCompiler_TextChanged(object sender, EventArgs e)
@@ -50,18 +51,18 @@ namespace Compiler_WinFrm
 
         private void runToolStripButton_Click(object sender, EventArgs e)
         {
-            LexicalAnalyst.Lexemes.Clear();
-            SyntacticAnalyst.Len = 0;
             if (txtCompiler.Text != string.Empty)
             {
-                string compile = LexicalAnalyst.Compile(txtCompiler.Text);
-                if (compile != string.Empty)
-                    txtErrors.Text = compile;
-                    //ErrorList(compile);
-                compile = SyntacticAnalyst.Compile();
-                if (compile != string.Empty)
-                    txtErrors.Text += compile;
-                    //ErrorList(compile);
+                //string compile = LexicalAnalyst.Compile(txtCompiler.Text);
+                //if (compile != string.Empty)
+                //    txtErrors.Text = compile;
+                //    //ErrorList(compile);
+                //compile = SyntacticAnalyst.Compile();
+                //if (compile != string.Empty)
+                //    txtErrors.Text += compile;
+                //    //ErrorList(compile);
+                txtErrors.Text = LexicalAnalyst.Compile(txtCompiler.Text);
+                txtErrors.Text += SyntacticAnalyst.Compile();
             }
         }
 
