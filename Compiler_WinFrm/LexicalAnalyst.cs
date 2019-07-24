@@ -261,7 +261,7 @@ namespace Compiler_WinFrm
             if (c.ToString() == "'")
             {
                 state = 0;
-                symbol.Add(address, new Symbol("char", str.Substring(index, len - index), "char", str.Substring(index, len - index)));
+                symbol.Add(address, new Symbol("Char", str.Substring(index, len - index), "Char", str.Substring(index, len - index)));
                 File.AppendAllText(path, address.ToString() + "\t\t" + symbol[address].token + "\t\t" + symbol[address].lexem + "\t\t" + symbol[address].type + "\t\t" + symbol[address].value + "\t\t" + symbol[address++].length.ToString() + "\r\n");
                 Lexemes.Add(str.Substring(index, len - index));
             }

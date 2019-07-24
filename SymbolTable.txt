@@ -1,0 +1,54 @@
+Address		Token		Lexem		Type		Value		Length
+0		NULL		$		NULL		$		0
+1		semicolon		;		semicolon		;		0
+2		If		if		key		if		0
+3		Else		else		key		else		0
+4		While		while		key		while		0
+5		For		for		key		for		0
+6		Do		do		key		do		0
+7		Switch		switch		key		switch		0
+8		Case		case		key		case		0
+9		Enum		enum		key		enum		0
+10		Class		class		key		class		0
+11		Begin		{		key		{		0
+12		End		}		key		}		0
+13		Open Parentheses		(		key		(		0
+14		Close Parentheses		)		key		)		0
+15		Open bracket		[		key		[		0
+16		Close bracket		]		key		]		0
+17		Include		include		key		include		0
+18		NameSpace		namespace		key		namspace		0
+19		Using		using		key		using		0
+20		New		new		key		new		0
+21		Delete		delete		key		delete		0
+22		Struct		struct		key		struct		0
+23		Static		static		key		static		0
+24		Public		public		key		public		0
+25		Private		private		key		private		0
+26		Protected		protected		key		protected		0
+27		Break		break		key		break		0
+28		Data Type		int		key		int		0
+29		Data Type		float		key		float		0
+30		Data Type		double		key		double		0
+31		Data Type		bool		key		bool		0
+32		Data Type		char		key		char		0
+33		Data Type		string		key		string		0
+34		Data Type		void		key		void		0
+35		ADD		+		operation		+		0
+36		DIFE		-		operation		-		0
+37		MUL		*		operation		*		0
+38		DIV		/		operation		/		0
+39		INC		++		operation		++		0
+40		DEC		--		operation		--		0
+41		Assign		=		operation		=		0
+42		and		&&		logic relation		&&		0
+43		or		||		logic relation		||		0
+44		not		!		logic relation		!		0
+45		and Bit		&		Bit relation		&		0
+46		or Bit		|		Bit relation		|		0
+47		eqall		==		Condition relation		==		0
+48		grather Than		>=		Condition relation		>=		0
+49		grather		>		Condition relation		>		0
+50		leter		<		Condition relation		<		0
+51		leter Than		<=		Condition relation		<=		0
+52		not Eqall		<>		Condition relation		<>		0

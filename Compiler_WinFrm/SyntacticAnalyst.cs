@@ -19,11 +19,12 @@ namespace Compiler_WinFrm
             for (int i = 0; i < LexicalAnalyst.symbol.Count; i++)
                 if (LexicalAnalyst.symbol[i].lexem == lexem)
                     return i;
-            return -1;
+            return 0;
         }
 
         private static string[,] SetCLRTable()
         {
+            #region ERRORS
             string EPlus = "The + or - operator must be applied to a pointer";
             string EId = "Identifier expected";
             string EMul = "The * or / operator must be applied to a pointer";
@@ -49,6 +50,7 @@ namespace Compiler_WinFrm
             string EColon = ": expected";
             string EDollar = "Invalid expression term '}' or 'break'";
             string EWow = "";
+            #endregion
 
             string[,] clr = {
                 {"S15",EVal,EPlus,EMul,EOParantes,ECParantes,EOAcolad,ECAcolad,EOPCon,EOPLogic,"S9","S10","S11","S12","S13",ECase,EBreak,"S14",ESC,"S16",EWow,EAssign,EDollar,"1","2","5","6","","3","4","8","","7","","","","","","","","","","",EColon,EElse},//0
@@ -73,8 +75,8 @@ namespace Compiler_WinFrm
                 {"S15",EVal,EPlus,EMul,EOParantes,ECParantes,EOAcolad,ECAcolad,EOPCon,EOPLogic,"S9","S10","S11","S12","S13",ECase,EBreak,"S14",ESC,"S16",EWow,EAssign,EDollar,"90","2","5","6","","3","4","8","","7","","","","","","","","","","",EColon,EElse},//19
                 {EId,EVal,EPlus,EMul,EOParantes,"r2M",EOAcolad,ECAcolad,EOPCon,EOPLogic,EIf,EWhile,EDo,EFor,"r2M",ECase,"r2M",EDT,"r2M",EIC,EWow,EAssign,EDollar,"","","","","","","","","","","","","","","","","","","","",EColon,EElse},//20
                 {EId,EVal,EPlus,EMul,EOParantes,ECParantes,EOAcolad,ECAcolad,EOPCon,EOPLogic,EIf,EWhile,EDo,EFor,ESwitch,ECase,EBreak,EDT,"S22",EIC,EWow,"S25",EAssign,EDollar,"","","","","","","","","","","","","23","","","","","","",EColon,EElse},//21
-                {EId,EVal,EPlus,EMul,"r1X",ECParantes,EOAcolad,"r1X",EOPCon,EOPLogic,EIf,EWhile,EDo,EFor,ESwitch,ECase,EBreak,EDT,ESC,EIC,EWow,EAssign,"r1X","","","","","","","","","","","","","","","","","","","","",EColon,EElse},//22
-                {EId,EVal,EPlus,EMul,"r3V",ECParantes,EOAcolad,"r3V",EOPCon,EOPLogic,EIf,EWhile,EDo,EFor,ESwitch,ECase,EBreak,EDT,ESC,EIC,EWow,EAssign,"r3V","","","","","","","","","","","","","","","","","","","","",EColon,EElse},//23
+                {EId,EVal,EPlus,EMul,"r1X",ECParantes,EOAcolad,"r1X",EOPCon,EOPLogic,EIf,EWhile,EDo,EFor,ESwitch,ECase,"r1X",EDT,ESC,EIC,EWow,EAssign,"r1X","","","","","","","","","","","","","","","","","","","","",EColon,EElse},//22
+                {EId,EVal,EPlus,EMul,"r3V",ECParantes,EOAcolad,"r3V",EOPCon,EOPLogic,EIf,EWhile,EDo,EFor,ESwitch,ECase,"r3V",EDT,ESC,EIC,EWow,EAssign,"r3V","","","","","","","","","","","","","","","","","","","","",EColon,EElse},//23
                 {EId,EVal,EPlus,EMul,EOParantes,"r2M",EOAcolad,ECAcolad,EOPCon,EOPLogic,EIf,EWhile,EDo,EFor,"r2M",ECase,"r2M",EDT,"r2M",EIC,EWow,EAssign,EDollar,"","","","","","","","","","","","","","","","","","","","",EColon,EElse},//24
                 {"S48",EVal,EPlus,EMul,"S80",ECParantes,EOAcolad,ECAcolad,EOPCon,EOPLogic,EIf,EWhile,EDo,EFor,ESwitch,ECase,EBreak,EDT,ESC,EIC,EWow,EAssign,EDollar,"","","","","","","","","","","","","","","","48","57","","","56",EColon,EElse},//25
                 {"S51",EVal,EPlus,EMul,"S80",ECParantes,EOAcolad,ECAcolad,EOPCon,EOPLogic,EIf,EWhile,EDo,EFor,ESwitch,ECase,EBreak,EDT,ESC,EIC,EWow,EAssign,EDollar,"","","","","","","","","","","","","","","","51","57","","","56",EColon,EElse},//26
@@ -90,7 +92,7 @@ namespace Compiler_WinFrm
                 {EId,EVal,EPlus,EMul,EOParantes,ECParantes,EOAcolad,"r7Y",EOPCon,EOPLogic,EIf,EWhile,EDo,EFor,ESwitch,ECase,"r7Z",EDT,ESC,EIC,EWow,EAssign,"r7Y","","","","","","","","","","","","","","","","","","","","",EColon,EElse},//36
                 {EId,EVal,EPlus,EMul,EOParantes,ECParantes,EOAcolad,ECAcolad,EOPCon,EOPLogic,EIf,EWhile,EDo,EFor,ESwitch,ECase,"S38",EDT,ESC,EIC,EWow,EAssign,EDollar,"","","","","","","","","","","","","","","","","","","","",EColon,EElse},//37
                 {EId,EVal,EPlus,EMul,EOParantes,ECParantes,EOAcolad,ECAcolad,EOPCon,EOPLogic,EIf,EWhile,EDo,EFor,ESwitch,ECase,EBreak,EDT,"S39",EIC,EWow,EAssign,EDollar,"","","","","","","","","","","","","","","","","","","","",EColon,EElse},//38
-                {EId,EVal,EPlus,EMul,EOParantes,ECParantes,EOAcolad,ECAcolad,EOPCon,EOPLogic,EIf,EWhile,EDo,EFor,ESwitch,"S32",EBreak,EDT,ESC,EIC,EWow,EAssign,EDollar,"","","","","40","","","","","","","","","","","","","","","",EColon,EElse},//39
+                {EId,EVal,EPlus,EMul,EOParantes,ECParantes,EOAcolad,"r1Z",EOPCon,EOPLogic,EIf,EWhile,EDo,EFor,ESwitch,"S32",EBreak,EDT,ESC,EIC,EWow,EAssign,EDollar,"","","","","40","","","","","","","","","","","","","","","",EColon,EElse},//39
                 {EId,EVal,EPlus,EMul,EOParantes,ECParantes,EOAcolad,"r7Z",EOPCon,EOPLogic,EIf,EWhile,EDo,EFor,ESwitch,ECase,EBreak,EDT,ESC,EIC,EWow,EAssign,EDollar,"","","","","","","","","","","","","","","","","","","","",EColon,EElse},//40
                 {EId,EVal,EPlus,EMul,EOParantes,"S46",EOAcolad,ECAcolad,EOPCon,EOPLogic,EIf,EWhile,EDo,EFor,ESwitch,ECase,EBreak,EDT,ESC,EIC,EWow,EAssign,EDollar,"","","","","","","","","","","","","","","","","","","","",EColon,EElse},//41
                 {EId,EVal,"r1B","S54",EOParantes,ECParantes,EOAcolad,ECAcolad,"S76",EOPLogic,EIf,EWhile,EDo,EFor,ESwitch,ECase,EBreak,EDT,ESC,EIC,EWow,EAssign,EDollar,"","","","","","","","","","","","","","","","","","","53","",EColon,EElse},//42
@@ -241,6 +243,8 @@ namespace Compiler_WinFrm
                         case "A": col = 40; break;
                         case "B": col = 41; break;
                         case "P": col = 42; break;
+                        case ":": col = 43; break;
+                        case "else": col = 44; break;
                     }
                     switch (LexicalAnalyst.symbol[address].token)
                     {
