@@ -62,7 +62,8 @@ namespace Compiler_WinFrm
                 //    txtErrors.Text += compile;
                 //    //ErrorList(compile);
                 txtErrors.Text = LexicalAnalyst.Compile(txtCompiler.Text);
-                txtErrors.Text += SyntacticAnalyst.Compile();
+                //txtErrors.Text += SyntacticAnalyst.Compile();
+                txtErrors.Text += SemanticAnalyst.Compile();
             }
         }
 
