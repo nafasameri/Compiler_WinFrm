@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+	<EditText
+		android:id="@+id/code"
+		android:background="@color/colorGray"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:layout_centerHorizontal="true"
+		android:layout_marginLeft="@dimen/activity_horizontal_margin"
+		android:layout_marginStart="@dimen/activity_horizontal_margin"
+		android:layout_marginTop="@dimen/activity_vertical_margin"
+		android:layout_marginBottom="150dp"
+		android:padding="@dimen/abc_action_bar_elevation_material" />
+	
+	<TextView
+		android:id="@+id/error"
+		android:background="?android:attr/colorError"
+		android:textColor="@android:drawable/stat_notify_error"
+		android:layout_width="fill_parent"
+		android:layout_height="80dp"
+		android:layout_centerHorizontal="true"
+		android:layout_marginLeft="@dimen/activity_horizontal_margin"
+		android:layout_marginStart="@dimen/activity_horizontal_margin"
+		android:layout_marginTop="410dp"
+		android:layout_marginBottom="@dimen/abc_action_bar_elevation_material"
+		android:padding="@dimen/abc_action_bar_elevation_material" />
+
+    <android.support.design.widget.bottomnavigationview
+        android:id="@+id/navigation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginend="0dp"
+        android:layout_marginstart="0dp"
+        android:background="?android:attr/windowbackground"
+        android:layout_alignparentbottom="true"
+        app:menu="@menu/navigation" />
+
+</RelativeLayout>
